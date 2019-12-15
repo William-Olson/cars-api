@@ -1,0 +1,40 @@
+{
+  "name": "cars-api",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "tsc && node build/app.js",
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "tsc": "tsc",
+    "dev": "gulp dev",
+    "build": "gulp"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@overnightjs/core": "^1.6.9",
+    "@overnightjs/jwt": "^1.1.14",
+    "@types/express": "^4.17.2",
+    "@types/node": "^12.12.14",
+    "async-retry": "^1.2.3",
+    "body-parser": "^1.19.0",
+    "debug": "^4.1.1",
+    "express": "^4.17.1",
+    "http-status-codes": "^1.4.0",
+    "mysql": "^2.17.1",
+    "reflect-metadata": "^0.1.13",
+    "supports-color": "^7.1.0",
+    "tsyringe": "^4.0.1",
+    "typeorm": "^0.2.21"
+  },
+  "devDependencies": {
+    "gulp": "^4.0.2",
+    "gulp-cli": "^2.2.0",
+    "gulp-nodemon": "^2.4.2",
+    "gulp-tslint": "^8.1.4",
+    "gulp-typescript": "^6.0.0-alpha.1",
+    "tslint": "^5.20.1",
+    "typescript": "^3.7.2"
+  }
+}
