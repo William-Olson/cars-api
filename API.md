@@ -90,6 +90,8 @@ The response will contain the resource with the matching id.
 
 ```js
 {
+  "id": 1,
+  "year": 2020,
   "color": {
     "id": 1,
     "name": "black"
@@ -97,15 +99,15 @@ The response will contain the resource with the matching id.
   "model": {
     "id": 1,
     "name": "r8",
-    "availableColors": [
-      {
-        "id": 1,
-        "name": "black"
-      }
-    ]
-  },
-  "year": 2020,
-  "id": 1
+    "make": {
+      "id": 1,
+      "name": "audi"
+    },
+    "bodyStyle": {
+      "id": 1,
+      "name": "sport"
+    }
+  }
 }
 ```
 
@@ -137,6 +139,8 @@ The response will contain the created resource.
 
 ```js
 {
+  "id": 1,
+  "year": 2020,
   "color": {
     "id": 1,
     "name": "black"
@@ -144,15 +148,15 @@ The response will contain the created resource.
   "model": {
     "id": 1,
     "name": "r8",
-    "availableColors": [
-      {
-        "id": 1,
-        "name": "black"
-      }
-    ]
-  },
-  "year": 2020,
-  "id": 1
+    "make": {
+      "id": 1,
+      "name": "audi"
+    },
+    "bodyStyle": {
+      "id": 1,
+      "name": "sport"
+    }
+  }
 }
 ```
 
@@ -188,6 +192,8 @@ The response will contain the updated resource.
 
 ```js
 {
+  "id": 1,
+  "year": 2019,
   "color": {
     "id": 2,
     "name": "silver"
@@ -195,15 +201,15 @@ The response will contain the updated resource.
   "model": {
     "id": 2,
     "name": "tts",
-    "availableColors": [
-      {
-        "id": 2,
-        "name": "silver"
-      }
-    ]
-  },
-  "year": 2019,
-  "id": 1
+    "make": {
+      "id": 1,
+      "name": "audi"
+    },
+    "bodyStyle": {
+      "id": 2,
+      "name": "coupe"
+    }
+  }
 }
 ```
 

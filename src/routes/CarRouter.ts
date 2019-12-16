@@ -40,7 +40,7 @@ export class CarRouter {
     const result = await this.db.pagedQuery(Car, {
       take: limit,
       skip: offset,
-      relations: ['color', 'model', 'model.make', 'model.bodyStyle' ]
+      relations: [ 'color', 'model', 'model.make', 'model.bodyStyle' ]
     });
 
     return result;
@@ -54,7 +54,9 @@ export class CarRouter {
       throw new ErrorResponse(BAD_REQUEST, `Bad id param ${req.params.id}`);
     }
 
-    const result = await this.carRepo.findOne(id);
+    const result = await this.carRepo.findOne(id, {
+      relations: [ 'color', 'model', 'model.make', 'model.bodyStyle' ]
+    });
 
     if (!result) {
       throw new ErrorResponse(NOT_FOUND, `Can't find car with id ${id}`);
@@ -67,9 +69,15 @@ export class CarRouter {
   public async createCar(req: Request, res: Response): Promise<Car>
   {
     const newCar: Car = await this.validateCarAndGetNewModel(req.body);
-    const result = await this.carRepo.save(newCar);
+    const { id } = await this.carRepo.save(newCar, { });
+    const fullModel = await this.carRepo.findOne(id, {
+      relations: [ 'color', 'model', 'model.make', 'model.bodyStyle' ]
+    });
+    if (!fullModel) {
+      throw new ErrorResponse(500, `Unable to retrieve created entity with id ${id}`);
+    }
     res.status(CREATED);
-    return result;
+    return fullModel;
   }
 
   @Put(':id')
@@ -79,14 +87,13 @@ export class CarRouter {
     const inputModel: Car = await this.validateCarAndGetNewModel(req.body, req.params.id);
 
     // update
-    await this.carRepo.createQueryBuilder()
-      .update(Car)
-      .set(inputModel)
-      .where('id = :id', { id: req.body.id })
-      .execute();
+    await this.carRepo.update(req.params.id, inputModel);
 
     // fetch and return updated
-    const result = await this.carRepo.findOne(req.body.id);
+    const result = await this.carRepo.findOne(req.body.id, {
+      relations: [ 'color', 'model', 'model.make', 'model.bodyStyle' ]
+    });
+
     if (!result) {
       throw new ErrorResponse(500, 'Unable to retrieve updated entity');
     }
