@@ -1,0 +1,696 @@
+{
+	"variables": [],
+	"info": {
+		"name": "cars-api",
+		"_postman_id": "8c9941ae-bcf0-508b-215f-0857a26db830",
+		"description": "",
+		"schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "body-styles",
+			"description": "",
+			"item": [
+				{
+					"name": "body-styles :: getAll",
+					"request": {
+						"url": {
+							"raw": "localhost:3000/body-styles?limit=100&offset=0",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"body-styles"
+							],
+							"query": [
+								{
+									"key": "limit",
+									"value": "100",
+									"equals": true,
+									"description": ""
+								},
+								{
+									"key": "offset",
+									"value": "0",
+									"equals": true,
+									"description": ""
+								}
+							],
+							"variable": []
+						},
+						"method": "GET",
+						"header": [],
+						"body": {},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "body-styles :: geById",
+					"request": {
+						"url": "localhost:3000/body-styles/1",
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"description": ""
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"name\": \"truck\"\n}"
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "body-styles :: create",
+					"request": {
+						"url": "localhost:3000/body-styles",
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"description": ""
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"name\": \"sedan\"\n}"
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "body-styles :: update",
+					"request": {
+						"url": "localhost:3000/body-styles/1",
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"description": ""
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"name\": \"sport\"\n}"
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "body-styles :: delete",
+					"request": {
+						"url": "localhost:3000/body-styles/1",
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"description": ""
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"name\": \"truck\"\n}"
+						},
+						"description": ""
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "colors",
+			"description": "",
+			"item": [
+				{
+					"name": "colors :: getAll",
+					"request": {
+						"url": {
+							"raw": "localhost:3000/colors?limit=100&offset=0",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"colors"
+							],
+							"query": [
+								{
+									"key": "limit",
+									"value": "100",
+									"equals": true,
+									"description": ""
+								},
+								{
+									"key": "offset",
+									"value": "0",
+									"equals": true,
+									"description": ""
+								}
+							],
+							"variable": []
+						},
+						"method": "GET",
+						"header": [],
+						"body": {},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "colors :: getById",
+					"request": {
+						"url": "localhost:3000/colors/1",
+						"method": "GET",
+						"header": [],
+						"body": {},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "colors :: create",
+					"request": {
+						"url": "localhost:3000/colors",
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"description": ""
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"name\": \"black\"\n}"
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "colors :: update",
+					"request": {
+						"url": "localhost:3000/colors/1",
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"description": ""
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"name\": \"gray\"\n}"
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "colors :: delete",
+					"request": {
+						"url": "localhost:3000/colors/1",
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"description": ""
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"description": ""
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "makes",
+			"description": "",
+			"item": [
+				{
+					"name": "makes :: getAll",
+					"request": {
+						"url": {
+							"raw": "localhost:3000/makes?limit=100&offset=0",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"makes"
+							],
+							"query": [
+								{
+									"key": "limit",
+									"value": "100",
+									"equals": true,
+									"description": ""
+								},
+								{
+									"key": "offset",
+									"value": "0",
+									"equals": true,
+									"description": ""
+								}
+							],
+							"variable": []
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"description": ""
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"name\": \"audi\"\n}"
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "makes :: getById",
+					"request": {
+						"url": "localhost:3000/makes/1",
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"description": ""
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"name\": \"audi\"\n}"
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "makes :: create",
+					"request": {
+						"url": "localhost:3000/makes",
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"description": ""
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"name\": \"audi\"\n}"
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "makes :: update",
+					"request": {
+						"url": "localhost:3000/makes/1",
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"description": ""
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"name\": \"bugatti\"\n}"
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "makes :: delete",
+					"request": {
+						"url": "localhost:3000/makes/1",
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"description": ""
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"name\": \"bugatti\"\n}"
+						},
+						"description": ""
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "models",
+			"description": "",
+			"item": [
+				{
+					"name": "models :: getAll",
+					"request": {
+						"url": {
+							"raw": "localhost:3000/models?limit=100&offset=0",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"models"
+							],
+							"query": [
+								{
+									"key": "limit",
+									"value": "100",
+									"equals": true,
+									"description": ""
+								},
+								{
+									"key": "offset",
+									"value": "0",
+									"equals": true,
+									"description": ""
+								}
+							],
+							"variable": []
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"description": ""
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"name\": \"audi\"\n}"
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "models :: getById",
+					"request": {
+						"url": "localhost:3000/models/1",
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"description": ""
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"name\": \"audi\"\n}"
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "models :: create",
+					"request": {
+						"url": "localhost:3000/models",
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"description": ""
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"colorIds\": [ 1 ],\n\t\"makeId\": 1,\n\t\"bodyStyleId\": 1,\n\t\"name\": \"r8\"\n}\n"
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "models :: update",
+					"request": {
+						"url": "localhost:3000/models/1",
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"description": ""
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"colorIds\": [ 1, 2 ],\n\t\"makeId\": 1,\n\t\"bodyStyleId\": 1,\n\t\"name\": \"r8\"\n}\n"
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "models :: delete",
+					"request": {
+						"url": "localhost:3000/models/1",
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"description": ""
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"description": ""
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "cars",
+			"description": "",
+			"item": [
+				{
+					"name": "cars :: getAll",
+					"request": {
+						"url": {
+							"raw": "localhost:3000/cars?limit=100&offset=0",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"cars"
+							],
+							"query": [
+								{
+									"key": "limit",
+									"value": "100",
+									"equals": true,
+									"description": ""
+								},
+								{
+									"key": "offset",
+									"value": "0",
+									"equals": true,
+									"description": ""
+								}
+							],
+							"variable": []
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"description": ""
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"name\": \"audi\"\n}"
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "cars :: getById",
+					"request": {
+						"url": "localhost:3000/cars/1",
+						"method": "GET",
+						"header": [],
+						"body": {},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "cars :: create",
+					"request": {
+						"url": "localhost:3000/cars",
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"description": ""
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"modelId\": 1,\n\t\"year\": \"2020\",\n\t\"colorId\": 1\n}"
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "cars :: update",
+					"request": {
+						"url": "localhost:3000/cars/1",
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"description": ""
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"modelId\": 1,\n\t\"year\": \"2020\",\n\t\"colorId\": 2\n}"
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "cars :: delete",
+					"request": {
+						"url": "localhost:3000/cars/1",
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"description": ""
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"description": ""
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "search",
+			"description": "",
+			"item": [
+				{
+					"name": "search :: cars",
+					"request": {
+						"url": {
+							"raw": "localhost:3000/search?limit=100&offset=0&year=2020&make=audi&color=black&bodyStyle=sport&model=r8",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"search"
+							],
+							"query": [
+								{
+									"key": "limit",
+									"value": "100",
+									"equals": true,
+									"description": ""
+								},
+								{
+									"key": "offset",
+									"value": "0",
+									"equals": true,
+									"description": ""
+								},
+								{
+									"key": "year",
+									"value": "2020",
+									"equals": true,
+									"description": ""
+								},
+								{
+									"key": "make",
+									"value": "audi",
+									"equals": true,
+									"description": ""
+								},
+								{
+									"key": "color",
+									"value": "black",
+									"equals": true,
+									"description": ""
+								},
+								{
+									"key": "bodyStyle",
+									"value": "sport",
+									"equals": true,
+									"description": ""
+								},
+								{
+									"key": "model",
+									"value": "r8",
+									"equals": true,
+									"description": ""
+								}
+							],
+							"variable": []
+						},
+						"method": "GET",
+						"header": [],
+						"body": {},
+						"description": ""
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}
