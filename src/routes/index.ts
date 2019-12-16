@@ -3,6 +3,7 @@ import MakeRouter from './MakeRouter';
 import BodyStyleRouter from './BodyStyleRouter';
 import ColorRouter from './ColorRouter';
 import ModelRouter from './ModelRouter';
+import { SearchRouter } from './SearchRouter';
 
 /*
 
@@ -24,6 +25,7 @@ export class Routes {
       BodyStyleRouter,
       ColorRouter,
       ModelRouter,
+      SearchRouter
     ];
   }
 

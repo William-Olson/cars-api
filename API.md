@@ -1,5 +1,11 @@
 ## API Endpoint Reference
 
+Provides descriptions of _endpoints_, _parameters_, and _responses_ as well as basic _curl examples_.
+
+**Postman Collection**
+
+If you are familiar with [Postman](https://www.getpostman.com/), there are postman collections for this API [here](https://github.com/William-Olson/cars-api/blob/master/postman-collections). Import one of them into Postman to start using the collection.
+
 **Sections**
 
 - [cars](#Cars)
@@ -7,6 +13,7 @@
 - [makes](#Makes)
 - [colors](#Colors)
 - [body-styles](#BodyStyles)
+- [search](#Search)
 
 ---
 
@@ -18,13 +25,49 @@ Fetch all cars.
 
 **Query Parameters**
 
-- `limit` represents the maximum number of items to retrieve.
-- `offset` represents the index of where to start the retrieval.
+- `limit` represents the maximum number of items to retrieve. Default is 100.
+- `offset` represents the index of where to start the retrieval. Default is 0.
+
+_Note:_ The `limit` and `offset` parameters can be utilized to achieve pagination.
 
 **Example**
 
 ```bash
-curl -X GET 'http://<ip-address>/cars?limit=100&offset=0'
+curl -X GET 'http://<server-address>/cars?limit=100&offset=0'
+```
+
+**Response**
+
+The response payload will include a `total` property representing the total rows found in the database and
+a `results` property containing an array of results with max size specified by the `limit` query param.
+
+```js
+{
+  "total": 500,
+  "results": [
+    {
+      "id": 1,
+      "year": 2020,
+      "color": {
+        "id": 1,
+        "name": "black"
+      },
+      "model": {
+        "id": 1,
+        "name": "r8",
+        "make": {
+          "id": 1,
+          "name": "audi"
+        },
+        "bodyStyle": {
+          "id": 1,
+          "name": "sport"
+        }
+      }
+    },
+    // ... etc.
+  ]
+}
 ```
 
 ### GET `/cars/{id}`
@@ -38,7 +81,32 @@ Get a specific car by its `ID`.
 **Example**
 
 ```bash
-curl -X GET 'http://<ip-address>/cars/1'
+curl -X GET 'http://<server-address>/cars/1'
+```
+
+**Response**
+
+The response will contain the resource with the matching id.
+
+```js
+{
+  "color": {
+    "id": 1,
+    "name": "black"
+  },
+  "model": {
+    "id": 1,
+    "name": "r8",
+    "availableColors": [
+      {
+        "id": 1,
+        "name": "black"
+      }
+    ]
+  },
+  "year": 2020,
+  "id": 1
+}
 ```
 
 ### POST `/cars/`
@@ -54,7 +122,7 @@ Create a new car.
 **Example**
 
 ```bash
-curl -X POST http://<ip-address>:3000/cars \
+curl -X POST http://<server-address>/cars \
   -H 'content-type: application/json' \
   -d '{
     "modelId": 1,
@@ -63,6 +131,30 @@ curl -X POST http://<ip-address>:3000/cars \
 	}'
 ```
 
+**Response**
+
+The response will contain the created resource.
+
+```js
+{
+  "color": {
+    "id": 1,
+    "name": "black"
+  },
+  "model": {
+    "id": 1,
+    "name": "r8",
+    "availableColors": [
+      {
+        "id": 1,
+        "name": "black"
+      }
+    ]
+  },
+  "year": 2020,
+  "id": 1
+}
+```
 
 ### PUT `/cars/{id}`
 
@@ -81,13 +173,38 @@ Update an existing car.
 **Example**
 
 ```bash
-curl -X PUT http://<ip-address>:3000/cars/1 \
+curl -X PUT http://<server-address>/cars/1 \
   -H 'content-type: application/json' \
   -d '{
     "modelId": 2,
     "year": "2019",
     "colorId": 2
 	}'
+```
+
+**Response**
+
+The response will contain the updated resource.
+
+```js
+{
+  "color": {
+    "id": 2,
+    "name": "silver"
+  },
+  "model": {
+    "id": 2,
+    "name": "tts",
+    "availableColors": [
+      {
+        "id": 2,
+        "name": "silver"
+      }
+    ]
+  },
+  "year": 2019,
+  "id": 1
+}
 ```
 
 
@@ -102,7 +219,18 @@ Delete a car.
 **Example**
 
 ```bash
-curl -X DELETE http://<ip-address>:3000/cars/1
+curl -X DELETE http://<server-address>/cars/1
+```
+
+**Response**
+
+The response will have a `success` boolean and a `message` property indicating the resource was deleted.
+
+```js
+{
+  "success": true,
+  "message": "Deleted car with id 1"
+}
 ```
 
 ---
@@ -121,7 +249,30 @@ Fetch all models.
 **Example**
 
 ```bash
-curl -X GET 'http://<ip-address>/models?limit=100&offset=0'
+curl -X GET 'http://<server-address>/models?limit=100&offset=0'
+```
+
+**Response**
+
+The response payload will include a `total` property representing the total rows found in the database and
+a `results` property containing an array of results with max size specified by the `limit` query param.
+
+```js
+{
+  "total": 500,
+  "results": [
+     {
+      "id": 1,
+      "name": "r8",
+      "availableColors": [
+        { "id": 1, "name": "black" }
+      ],
+      "bodyStyle": { "id": 1, "name": "sport" },
+      "make": { "id": 1, "name": "audi" }
+    },
+    // ... etc.
+  ]
+}
 ```
 
 ### GET `/models/{id}`
@@ -135,10 +286,24 @@ Get a specific model by its `ID`.
 **Example**
 
 ```bash
-curl -X GET 'http://<ip-address>/models/1'
+curl -X GET 'http://<server-address>/models/1'
 ```
 
+**Response**
 
+The response will contain the resource with the matching id.
+
+```js
+{
+  "id": 1,
+  "name": "r8",
+  "availableColors": [
+    { "id": 1, "name": "black" }
+  ],
+  "bodyStyle": { "id": 1, "name": "sport" },
+  "make": { "id": 1, "name": "audi" }
+}
+```
 
 ### POST `/models/`
 
@@ -155,7 +320,7 @@ Create a new model.
 **Example**
 
 ```bash
-curl -X POST http://<ip-address>:3000/models \
+curl -X POST http://<server-address>/models \
   -H 'content-type: application/json' \
   -d '{
     "colorIds": [ 1 ],
@@ -165,6 +330,21 @@ curl -X POST http://<ip-address>:3000/models \
   }'
 ```
 
+**Response**
+
+The response will contain the created resource.
+
+```js
+{
+  "id": 1,
+  "name": "r8",
+  "availableColors": [
+    { "id": 1, "name": "black" }
+  ],
+  "bodyStyle": { "id": 1, "name": "sport" },
+  "make": { "id": 1, "name": "audi" }
+}
+```
 
 ### PUT `/models/{id}`
 
@@ -184,14 +364,31 @@ Update an existing model.
 **Example**
 
 ```bash
-curl -X PUT http://<ip-address>:3000/models/1 \
+curl -X PUT http://<server-address>/models/1 \
   -H 'content-type: application/json' \
   -d '{
     "colorIds": [ 1, 2 ],
     "makeId": 1,
     "bodyStyleId": 2,
-    "name": "r8"
+    "name": "tts"
 	}'
+```
+
+**Response**
+
+The response will contain the updated resource.
+
+```js
+{
+  "id": 1,
+  "name": "tts",
+  "availableColors": [
+    { "id": 1, "name": "black" },
+    { "id": 2, "name": "silver" }
+  ],
+  "bodyStyle": { "id": 2, "name": "coupe" },
+  "make": { "id": 1, "name": "audi" }
+}
 ```
 
 ### DELETE `/models/{id}`
@@ -205,7 +402,18 @@ Delete a model.
 **Example**
 
 ```bash
-curl -X DELETE http://<ip-address>:3000/models/1
+curl -X DELETE http://<server-address>/models/1
+```
+
+**Response**
+
+The response will have a `success` boolean and a `message` property indicating the resource was deleted.
+
+```js
+{
+  "success": true,
+  "message": "Deleted model with id 1"
+}
 ```
 
 ---
@@ -224,7 +432,25 @@ Fetch all makes.
 **Example**
 
 ```bash
-curl -X GET 'http://<ip-address>/makes?limit=100&offset=0'
+curl -X GET 'http://<server-address>/makes?limit=100&offset=0'
+```
+
+**Response**
+
+The response payload will include a `total` property representing the total rows found in the database and
+a `results` property containing an array of results with max size specified by the `limit` query param.
+
+```js
+{
+  "total": 500,
+  "results": [
+    {
+      "id": 1,
+      "name": "audi"
+    },
+    // ... etc.
+  ]
+}
 ```
 
 ### GET `/makes/{id}`
@@ -238,9 +464,19 @@ Get a specific make by its `ID`.
 **Example**
 
 ```bash
-curl -X GET 'http://<ip-address>/makes/1'
+curl -X GET 'http://<server-address>/makes/1'
 ```
 
+**Response**
+
+The response will contain the resource with the matching id.
+
+```js
+{
+  "id": 1,
+  "name": "audi"
+}
+```
 
 
 ### POST `/makes/`
@@ -254,11 +490,21 @@ Create a new make.
 **Example**
 
 ```bash
-curl -X POST http://<ip-address>:3000/makes \
+curl -X POST http://<server-address>/makes \
   -H 'content-type: application/json' \
   -d '{ "name": "audi" }'
 ```
 
+**Response**
+
+The response will contain the created resource.
+
+```js
+{
+  "name": "audi",
+  "id": 1
+}
+```
 
 ### PUT `/makes/{id}`
 
@@ -275,11 +521,21 @@ Update an existing make.
 **Example**
 
 ```bash
-curl -X PUT http://<ip-address>:3000/makes/1 \
+curl -X PUT http://<server-address>/makes/1 \
   -H 'content-type: application/json' \
   -d '{ "name": "tesla" }'
 ```
 
+**Response**
+
+The response will contain the updated resource.
+
+```js
+{
+  "name": "tesla",
+  "id": 1
+}
+```
 
 ### DELETE `/makes/{id}`
 
@@ -292,7 +548,18 @@ Delete a make.
 **Example**
 
 ```bash
-curl -X DELETE http://<ip-address>:3000/makes/1
+curl -X DELETE http://<server-address>/makes/1
+```
+
+**Response**
+
+The response will have a `success` boolean and a `message` property indicating the resource was deleted.
+
+```js
+{
+  "success": true,
+  "message": "Deleted make with id 1"
+}
 ```
 
 ---
@@ -311,7 +578,25 @@ Fetch all colors.
 **Example**
 
 ```bash
-curl -X GET 'http://<ip-address>/colors?limit=100&offset=0'
+curl -X GET 'http://<server-address>/colors?limit=100&offset=0'
+```
+
+**Response**
+
+The response payload will include a `total` property representing the total rows found in the database and
+a `results` property containing an array of results with max size specified by the `limit` query param.
+
+```js
+{
+  "total": 500,
+  "results": [
+    {
+      "id": 1,
+      "name": "black"
+    },
+    // ... etc.
+  ]
+}
 ```
 
 ### GET `/colors/{id}`
@@ -325,7 +610,18 @@ Get a specific color by its `ID`.
 **Example**
 
 ```bash
-curl -X GET 'http://<ip-address>/colors/1'
+curl -X GET 'http://<server-address>/colors/1'
+```
+
+**Response**
+
+The response will contain the resource with the matching id.
+
+```js
+{
+  "id": 1,
+  "name": "black"
+}
 ```
 
 ### POST `/colors/`
@@ -339,11 +635,21 @@ Create a new color.
 **Example**
 
 ```bash
-curl -X POST http://<ip-address>:3000/colors \
+curl -X POST http://<server-address>/colors \
   -H 'content-type: application/json' \
   -d '{ "name": "black" }'
 ```
 
+**Response**
+
+The response will contain the created resource.
+
+```js
+{
+  "name": "black",
+  "id": 1
+}
+```
 
 ### PUT `/colors/{id}`
 
@@ -360,11 +666,21 @@ Update an existing color.
 **Example**
 
 ```bash
-curl -X PUT http://<ip-address>:3000/colors/1 \
+curl -X PUT http://<server-address>/colors/1 \
   -H 'content-type: application/json' \
   -d '{ "name": "silver" }'
 ```
 
+**Response**
+
+The response will contain the updated resource.
+
+```js
+{
+  "id": 1,
+  "name": "silver"
+}
+```
 
 ### DELETE `/colors/{id}`
 
@@ -377,9 +693,19 @@ Delete a color.
 **Example**
 
 ```bash
-curl -X DELETE http://<ip-address>:3000/colors/1
+curl -X DELETE http://<server-address>/colors/1
 ```
 
+**Response**
+
+The response will have a `success` boolean and a `message` property indicating the resource was deleted.
+
+```js
+{
+  "success": true,
+  "message": "Deleted color with id 1"
+}
+```
 
 ---
 
@@ -397,7 +723,25 @@ Fetch all body-styles.
 **Example**
 
 ```bash
-curl -X GET 'http://<ip-address>/body-styles?limit=100&offset=0'
+curl -X GET 'http://<server-address>/body-styles?limit=100&offset=0'
+```
+
+**Response**
+
+The response payload will include a `total` property representing the total rows found in the database and
+a `results` property containing an array of results with max size specified by the `limit` query param.
+
+```js
+{
+  "total": 500,
+  "results": [
+    {
+      "id": 1,
+      "name": "sport"
+    },
+    // ... etc.
+  ]
+}
 ```
 
 ### GET `/body-styles/{id}`
@@ -411,7 +755,18 @@ Get a specific body-style by its `ID`.
 **Example**
 
 ```bash
-curl -X GET 'http://<ip-address>/body-styles/1'
+curl -X GET 'http://<server-address>/body-styles/1'
+```
+
+**Response**
+
+The response will contain the resource with the matching id.
+
+```js
+{
+  "id": 1,
+  "name": "sport"
+}
 ```
 
 ### POST `/body-styles/`
@@ -425,11 +780,21 @@ Create a new body-style.
 **Example**
 
 ```bash
-curl -X POST http://<ip-address>:3000/body-styles \
+curl -X POST http://<server-address>/body-styles \
   -H 'content-type: application/json' \
   -d '{ "name": "sedan" }'
 ```
 
+**Response**
+
+The response will contain the created resource.
+
+```js
+{
+  "name": "sedan",
+  "id": 1
+}
+```
 
 ### PUT `/body-styles/{id}`
 
@@ -446,11 +811,21 @@ Update an existing body-style.
 **Example**
 
 ```bash
-curl -X PUT http://<ip-address>:3000/body-styles/1 \
+curl -X PUT http://<server-address>/body-styles/1 \
   -H 'content-type: application/json' \
   -d '{ "name": "sport" }'
 ```
 
+**Response**
+
+The response will contain the updated resource.
+
+```js
+{
+  "id": 1,
+  "name": "sport"
+}
+```
 
 ### DELETE `/body-styles/{id}`
 
@@ -463,5 +838,82 @@ Delete a body-style.
 **Example**
 
 ```bash
-curl -X DELETE http://<ip-address>:3000/body-styles/1
+curl -X DELETE http://<server-address>/body-styles/1
 ```
+
+**Response**
+
+The response will have a `success` boolean and a `message` property indicating the resource was deleted.
+
+```js
+{
+  "success": true,
+  "message": "Deleted body-style with id 1"
+}
+```
+
+---
+
+## Search
+
+### GET `/search/`
+
+Fetch a filtered list of cars via search parameters.
+
+**Query Parameters**
+
+- `limit` represents the maximum number of items to retrieve.
+- `offset` represents the index of where to start the retrieval.
+- `make` is the search input for the make of the car.
+- `model` is the search input for the model of the car.
+- `year` is the search input for the year of the car.
+- `bodyStyle` is the search input for the bodyStyle of the car.
+- `color` is the search input for the color of the car.
+
+**Examples**
+
+Provide as few params as you want.
+
+```bash
+curl -X GET 'http://<server-address>/search?bodyStyle=sport'
+```
+
+Or provide all parameters for specific searching.
+
+```bash
+curl -X GET \
+  'http://<server-address>/search?limit=100&offset=0&year=2020&make=audi&color=black&bodyStyle=sport&model=r8'
+```
+
+**Response**
+
+The response payload will include a `total` property representing the total rows found in the database and
+a `results` property containing an array of results with max size specified by the `limit` query param.
+
+```js
+{
+  "total": 500,
+  "results": [
+    {
+      "id": 1,
+      "year": 2020,
+      "color": {
+        "id": 1,
+        "name": "black"
+      },
+      "model": {
+        "id": 1,
+        "name": "r8",
+        "make": {
+          "id": 1,
+          "name": "audi"
+        },
+        "bodyStyle": {
+          "id": 1,
+          "name": "sport"
+        }
+      }
+    },
+    // ... etc.
+  ]
+}

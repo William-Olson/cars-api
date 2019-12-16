@@ -169,7 +169,7 @@ export class ModelRouter {
     const nameExists = await this.modelRepo.findOne({ where: hasName });
 
     if (nameExists) {
-      throw new ErrorResponse(BAD_REQUEST, `A model with the name '${input.name}' already exists`);
+      throw new ErrorResponse(UNPROCESSABLE_ENTITY, `A model with the name '${input.name}' already exists`);
     }
 
 
