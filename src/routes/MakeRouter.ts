@@ -1,4 +1,4 @@
-import { OK, BAD_REQUEST, UNPROCESSABLE_ENTITY } from 'http-status-codes';
+import { BAD_REQUEST, UNPROCESSABLE_ENTITY, CREATED, NOT_FOUND } from 'http-status-codes';
 import { Controller, Post, ClassWrapper, Get, Put, Delete } from '@overnightjs/core';
 import { injectable } from 'tsyringe';
 import { Request, Response } from 'express';
@@ -41,12 +41,11 @@ export class MakeRouter {
       skip: offset
     });
 
-    res.status(OK);
     return result;
   }
 
-  @Get('/:id')
-  public async getMakeById(req: Request, res: Response): Promise<Make>
+  @Get(':id')
+  public async getMakeById(req: Request): Promise<Make>
   {
     const id: number = parseInt(req.params.id, 10);
     if (isNaN(id)) {
@@ -56,7 +55,7 @@ export class MakeRouter {
     const result = await this.makeRepo.findOne(id);
 
     if (!result) {
-      throw new ErrorResponse(UNPROCESSABLE_ENTITY, `Can't find make with id ${id}`);
+      throw new ErrorResponse(NOT_FOUND, `Can't find make with id ${id}`);
     }
 
     return result;
@@ -78,12 +77,17 @@ export class MakeRouter {
     const newMake: Make = new Make();
     newMake.name = req.body.name.toLowerCase();
     const result = await this.makeRepo.save(newMake);
+    res.status(CREATED);
     return result;
   }
 
-  @Put('/:id')
+  @Put(':id')
   public async updateMake(req: Request, res: Response): Promise<Make>
   {
+    if (!req.body.name) {
+      throw new ErrorResponse(BAD_REQUEST, 'Missing name field');
+    }
+
     // validate uniqueness of name
     const nameExists = await this.makeRepo.findOne({ where: {
       name: req.body.name.toLowerCase(),
@@ -94,22 +98,18 @@ export class MakeRouter {
       throw new ErrorResponse(BAD_REQUEST, `A make with the name '${req.body.name}' already exists`);
     }
 
-    // update
-    await this.makeRepo.createQueryBuilder()
-      .update(Make)
-      .set({ name: req.body.name.toLowerCase() })
-      .where('id = :id', { id: req.body.id })
-      .execute();
-
-    // fetch and return updated
-    const result = await this.makeRepo.findOne(req.body.id);
-    if (!result) {
-      throw new ErrorResponse(500, 'Unable to retrieve updated entity');
+    // fetch entry
+    const make = await this.makeRepo.findOne(req.params.id);
+    if (!make) {
+      throw new ErrorResponse(UNPROCESSABLE_ENTITY, `Can't find make with id ${req.params.id}`);
     }
-    return result;
+
+    // update it
+    make.name = req.body.name.toLowerCase();
+    return await this.makeRepo.save(make);
   }
 
-  @Delete('/:id')
+  @Delete(':id')
   public async deleteMake(req, resp)
   {
 
@@ -118,6 +118,12 @@ export class MakeRouter {
       throw new ErrorResponse(BAD_REQUEST, `Bad id param ${req.params.id}`);
     }
 
+    const make = await this.makeRepo.findOne(id);
+    if (!make) {
+      throw new ErrorResponse(UNPROCESSABLE_ENTITY, `Can't find make with id ${id}`);
+    }
+
+    // delete
     const result = await this.makeRepo.createQueryBuilder()
       .delete()
       .from(Make)
@@ -128,7 +134,10 @@ export class MakeRouter {
       throw new ErrorResponse(500, `Problem occurred attempting to delete make with id ${id}`);
     }
 
-    return { success: true };
+    return {
+      success: true,
+      message: `Deleted make with id ${id}`
+    };
 
   }
 

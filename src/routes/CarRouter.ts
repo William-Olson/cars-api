@@ -1,5 +1,5 @@
-import { OK, BAD_REQUEST, UNPROCESSABLE_ENTITY } from 'http-status-codes';
-import { Controller, Post, ClassWrapper, Get, Put } from '@overnightjs/core';
+import { BAD_REQUEST, UNPROCESSABLE_ENTITY, CREATED, NOT_FOUND } from 'http-status-codes';
+import { Controller, Post, ClassWrapper, Get, Put, Delete } from '@overnightjs/core';
 import { injectable } from 'tsyringe';
 import { Request, Response } from 'express';
 import { DbService, PagedResponse } from '../services/DbService';
@@ -39,14 +39,14 @@ export class CarRouter {
 
     const result = await this.db.pagedQuery(Car, {
       take: limit,
-      skip: offset
+      skip: offset,
+      relations: ['color', 'model', 'model.make', 'model.bodyStyle' ]
     });
 
-    res.status(OK);
     return result;
   }
 
-  @Get('/:id')
+  @Get(':id')
   public async getCarById(req: Request, res: Response): Promise<Car>
   {
     const id: number = parseInt(req.params.id, 10);
@@ -57,7 +57,7 @@ export class CarRouter {
     const result = await this.carRepo.findOne(id);
 
     if (!result) {
-      throw new ErrorResponse(UNPROCESSABLE_ENTITY, `Can't find car with id ${id}`);
+      throw new ErrorResponse(NOT_FOUND, `Can't find car with id ${id}`);
     }
 
     return result;
@@ -68,10 +68,11 @@ export class CarRouter {
   {
     const newCar: Car = await this.validateCarAndGetNewModel(req.body);
     const result = await this.carRepo.save(newCar);
+    res.status(CREATED);
     return result;
   }
 
-  @Put('/:id')
+  @Put(':id')
   public async updateCar(req: Request, res: Response): Promise<Car>
   {
     // validate
@@ -90,6 +91,37 @@ export class CarRouter {
       throw new ErrorResponse(500, 'Unable to retrieve updated entity');
     }
     return result;
+  }
+
+  @Delete(':id')
+  public async deleteCar(req: Request)
+  {
+
+    const id: number = parseInt(req.params.id, 10);
+    if (isNaN(id)) {
+      throw new ErrorResponse(BAD_REQUEST, `Bad id param ${req.params.id}`);
+    }
+
+    const car = await this.carRepo.findOne(id);
+    if (!car) {
+      throw new ErrorResponse(UNPROCESSABLE_ENTITY, `Can't find car with id ${id}`);
+    }
+
+    const result = await this.carRepo.createQueryBuilder()
+      .delete()
+      .from(Car)
+      .where('id = :id', { id })
+      .execute();
+
+    if (!result || !result.affected) {
+      throw new ErrorResponse(500, `Problem occurred attempting to delete car with id ${id}`);
+    }
+
+    return {
+      success: true,
+      message: `Deleted car with id ${id}`
+    };
+
   }
 
   /*

@@ -1,4 +1,4 @@
-import { OK, BAD_REQUEST, UNPROCESSABLE_ENTITY } from 'http-status-codes';
+import { BAD_REQUEST, UNPROCESSABLE_ENTITY, CREATED, NOT_FOUND } from 'http-status-codes';
 import { Controller, Post, ClassWrapper, Get, Put, Delete } from '@overnightjs/core';
 import { injectable } from 'tsyringe';
 import { Request, Response } from 'express';
@@ -11,6 +11,7 @@ import ErrorResponse from './util/ErrorResponse';
 import Model from '../models/Model';
 import Make from '../models/Make';
 import Color from '../models/Color';
+import BodyStyle from '../models/BodyStyle';
 
 
 @injectable()
@@ -41,14 +42,13 @@ export class ModelRouter {
     const result = await this.db.pagedQuery(Model, {
       take: limit,
       skip: offset,
-      relations: [ 'body_styles', 'colors', 'makes' ]
+      relations: [ 'availableColors', 'bodyStyle', 'make' ]
     });
 
-    res.status(OK);
     return result;
   }
 
-  @Get('/:id')
+  @Get(':id')
   public async getModelById(req: Request, res: Response): Promise<Model>
   {
     const id: number = parseInt(req.params.id, 10);
@@ -58,11 +58,11 @@ export class ModelRouter {
 
     const result = await this.modelRepo.findOne({
       where: { id },
-      relations: [ 'body_styles', 'colors', 'makes' ]
+      relations: [ 'availableColors', 'bodyStyle', 'make' ]
     });
 
     if (!result) {
-      throw new ErrorResponse(UNPROCESSABLE_ENTITY, `Can't find model with id ${id}`);
+      throw new ErrorResponse(NOT_FOUND, `Can't find model with id ${id}`);
     }
 
     return result;
@@ -74,11 +74,12 @@ export class ModelRouter {
 
     const newModel: Model = await this.validateAndInflateModel(req.body);
     const result = await this.modelRepo.save(newModel);
+    res.status(CREATED);
     return result;
 
   }
 
-  @Put('/:id')
+  @Put(':id')
   public async updateModel(req: Request, res: Response): Promise<Model>
   {
     const id = parseInt(req.params.id, 10);
@@ -97,7 +98,7 @@ export class ModelRouter {
     return result;
   }
 
-  @Delete('/:id')
+  @Delete(':id')
   public async deleteModel(req, resp)
   {
 
@@ -178,6 +179,12 @@ export class ModelRouter {
       throw new ErrorResponse(UNPROCESSABLE_ENTITY, `Can't find make with id ${input.makeId}`);
     }
 
+    // resolve bodyStyle
+    const bodyStyle = await this.db.repo(BodyStyle).findOne(input.bodyStyleId);
+    if (!bodyStyle) {
+      throw new ErrorResponse(UNPROCESSABLE_ENTITY, `Can't find body-style with id ${input.bodyStyleId}`);
+    }
+
     // resolve colors
     let colors: Color[] = [ ];
     if (input.colorIds.length) {
@@ -185,8 +192,8 @@ export class ModelRouter {
       const resultColorIdSet = new Set(colors.map(c => c.id));
       const notFound = input.colorIds.find(colorId => !resultColorIdSet.has(colorId));
 
-      if (!notFound) {
-        throw new ErrorResponse(UNPROCESSABLE_ENTITY, `Can't find color with id ${id}`);
+      if (notFound) {
+        throw new ErrorResponse(UNPROCESSABLE_ENTITY, `Can't find color with id ${notFound}`);
       }
     }
 
@@ -201,8 +208,9 @@ export class ModelRouter {
     }
 
     // set validated data
-    model.availableColors = colors;
     model.make = make;
+    model.bodyStyle = bodyStyle;
+    model.availableColors = colors;
     model.name = input.name.toLowerCase();
 
     return model;

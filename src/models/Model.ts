@@ -12,15 +12,15 @@ export class Model {
   @Column({ unique: true, nullable: false })
   public name?: string;
 
-  @ManyToOne(() => Make)
+  @ManyToOne(() => Make, {  cascade: [ 'remove' ], nullable: false })
   @JoinColumn({ name: 'make_id', referencedColumnName: 'id' })
   public make?: Make;
 
-  @ManyToOne(() => BodyStyle)
+  @ManyToOne(() => BodyStyle, { cascade: [ 'remove' ], nullable: false })
   @JoinColumn({ name: 'body_style_id', referencedColumnName: 'id' })
   public bodyStyle?: BodyStyle;
 
-  @ManyToMany(() => Color, { cascade: [ 'remove' ], onDelete: 'CASCADE' })
+  @ManyToMany(() => Color, { cascade: [ 'remove' ], onDelete: 'CASCADE', nullable: false })
   @JoinTable({
     name: 'model_colors',
     joinColumn: { name: 'model_id', referencedColumnName: 'id' },

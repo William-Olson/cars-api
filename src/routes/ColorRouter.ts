@@ -1,4 +1,4 @@
-import { OK, BAD_REQUEST, UNPROCESSABLE_ENTITY } from 'http-status-codes';
+import { BAD_REQUEST, UNPROCESSABLE_ENTITY, CREATED, NOT_FOUND } from 'http-status-codes';
 import { Controller, Post, ClassWrapper, Get, Put, Delete } from '@overnightjs/core';
 import { injectable } from 'tsyringe';
 import { Request, Response } from 'express';
@@ -17,12 +17,12 @@ import Color from '../models/Color';
 export class ColorRouter {
 
   private logger: DebugFn;
-  private bodyStyleRepo: Repository<Color>;
+  private colorRepo: Repository<Color>;
 
   constructor(loggerFactory: LoggerFactory, private db: DbService)
   {
     this.logger = loggerFactory.getLogger('app:routes:ColorRouter');
-    this.bodyStyleRepo = this.db.repo(Color);
+    this.colorRepo = this.db.repo(Color);
   }
 
   @Get()
@@ -41,11 +41,10 @@ export class ColorRouter {
       skip: offset
     });
 
-    res.status(OK);
     return result;
   }
 
-  @Get('/:id')
+  @Get(':id')
   public async getColorById(req: Request, res: Response): Promise<Color>
   {
     const id: number = parseInt(req.params.id, 10);
@@ -53,10 +52,10 @@ export class ColorRouter {
       throw new ErrorResponse(BAD_REQUEST, `Bad id param ${req.params.id}`);
     }
 
-    const result = await this.bodyStyleRepo.findOne(id);
+    const result = await this.colorRepo.findOne(id);
 
     if (!result) {
-      throw new ErrorResponse(UNPROCESSABLE_ENTITY, `Can't find color with id ${id}`);
+      throw new ErrorResponse(NOT_FOUND, `Can't find color with id ${id}`);
     }
 
     return result;
@@ -66,7 +65,7 @@ export class ColorRouter {
   public async createColor(req: Request, res: Response): Promise<Color>
   {
     // validate uniqueness of name
-    const nameExists = await this.bodyStyleRepo.findOne({
+    const nameExists = await this.colorRepo.findOne({
       where: { name: req.body.name.toLowerCase() }
     });
 
@@ -77,15 +76,20 @@ export class ColorRouter {
     // create the new make
     const newColor: Color = new Color();
     newColor.name = req.body.name.toLowerCase();
-    const result = await this.bodyStyleRepo.save(newColor);
+    const result = await this.colorRepo.save(newColor);
+    res.status(CREATED);
     return result;
   }
 
-  @Put('/:id')
+  @Put(':id')
   public async updateColor(req: Request, res: Response): Promise<Color>
   {
+    if (!req.body.name) {
+      throw new ErrorResponse(BAD_REQUEST, 'Missing name field');
+    }
+
     // validate uniqueness of name
-    const nameExists = await this.bodyStyleRepo.findOne({ where: {
+    const nameExists = await this.colorRepo.findOne({ where: {
       name: req.body.name.toLowerCase(),
       id: Not(Equal(req.params.id))
     }});
@@ -94,22 +98,18 @@ export class ColorRouter {
       throw new ErrorResponse(BAD_REQUEST, `A color with the name '${req.body.name}' already exists`);
     }
 
-    // update
-    await this.bodyStyleRepo.createQueryBuilder()
-      .update(Color)
-      .set({ name: req.body.name.toLowerCase() })
-      .where('id = :id', { id: req.body.id })
-      .execute();
-
-    // fetch and return updated
-    const result = await this.bodyStyleRepo.findOne(req.body.id);
-    if (!result) {
-      throw new ErrorResponse(500, 'Unable to retrieve updated entity');
+    // fetch entry
+    const color = await this.colorRepo.findOne(req.params.id);
+    if (!color) {
+      throw new ErrorResponse(UNPROCESSABLE_ENTITY, `Can't find color with id ${req.params.id}`);
     }
-    return result;
+
+    // update it
+    color.name = req.body.name.toLowerCase();
+    return await this.colorRepo.save(color);
   }
 
-  @Delete('/:id')
+  @Delete(':id')
   public async deleteColor(req, resp)
   {
 
@@ -118,7 +118,12 @@ export class ColorRouter {
       throw new ErrorResponse(BAD_REQUEST, `Bad id param ${req.params.id}`);
     }
 
-    const result = await this.bodyStyleRepo.createQueryBuilder()
+    const color = await this.colorRepo.findOne(id);
+    if (!color) {
+      throw new ErrorResponse(UNPROCESSABLE_ENTITY, `Can't find color with id ${id}`);
+    }
+
+    const result = await this.colorRepo.createQueryBuilder()
       .delete()
       .from(Color)
       .where('id = :id', { id })
@@ -128,7 +133,10 @@ export class ColorRouter {
       throw new ErrorResponse(500, `Problem occurred attempting to delete color with id ${id}`);
     }
 
-    return { success: true };
+    return {
+      success: true,
+      message: `Deleted color with id ${id}`
+    };
 
   }
 
