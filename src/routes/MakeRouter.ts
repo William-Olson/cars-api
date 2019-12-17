@@ -4,12 +4,22 @@ import { injectable } from 'tsyringe';
 import { Request, Response } from 'express';
 import { DbService, PagedResponse } from '../services/DbService';
 import { Repository, Not, Equal } from 'typeorm';
+import {
+  ApiPath,
+  ApiOperationGet,
+  SwaggerDefinitionConstant,
+  ApiOperationPut,
+  ApiOperationDelete,
+  ApiOperationPost
+} from 'swagger-express-ts';
 
 import LoggerFactory, { DebugFn } from '../services/LoggerFactory';
 import harness from './util/harness';
 import ErrorResponse from './util/ErrorResponse';
 import Make from '../models/Make';
-import { ApiPath, ApiOperationGet, SwaggerDefinitionConstant } from 'swagger-express-ts';
+import { PagedMakes } from './util/swagger-models/PagedResponses';
+import { DeletionResponse } from './util/swagger-models/DeletionResponse';
+import { EntityInput } from './util/swagger-models/EntityInput';
 
 @ApiPath({
   path: '/makes',
@@ -29,6 +39,20 @@ export class MakeRouter {
     this.makeRepo = this.db.repo(Make);
   }
 
+  @ApiOperationGet({
+    description: 'Fetch all Makes',
+    summary: 'Fetch Makes',
+    parameters: {
+      query: {
+        limit: { name: 'limit', description: 'max results to retrieve', required: false },
+        offset: { name: 'offset', description: 'offset of first result index', required: false }
+      }
+    },
+    responses: {
+        200: { description: 'Success', type: SwaggerDefinitionConstant.Response.Type.OBJECT, model: PagedMakes.name },
+        400: { description: 'Bad Parameters' }
+    }
+  })
   @Get()
   public async getMakes(req: Request, res: Response): Promise<PagedResponse<Make>>
   {
@@ -49,11 +73,11 @@ export class MakeRouter {
   }
 
   @ApiOperationGet({
-    description: 'Get a make by its ID',
+    description: 'Get a Make by its ID',
     path: '/{id}',
-    summary: 'Get make by ID',
+    summary: 'Get Make by ID',
     parameters: {
-      path: { id: { name: 'id', description: 'The ID of the make', required: true } }
+      path: { id: { name: 'id', description: 'The ID of the Make', required: true } }
     },
     responses: {
         200: { description: 'Success', type: SwaggerDefinitionConstant.Response.Type.OBJECT, model: 'Make' },
@@ -78,6 +102,22 @@ export class MakeRouter {
     return result;
   }
 
+  @ApiOperationPost({
+    description: 'Create a Make',
+    summary: 'Create Make',
+    parameters: {
+      body: { description: 'The Make to create', required: true, model: EntityInput.name }
+    },
+    responses: {
+        200: {
+          description: 'Success',
+          type: SwaggerDefinitionConstant.Response.Type.OBJECT,
+          model: Make.name
+        },
+        400: { description: 'Bad Parameters' },
+        422: { description: 'Unprocessable Entity' }
+    }
+  })
   @Post()
   public async createMake(req: Request, res: Response): Promise<Make>
   {
@@ -98,6 +138,19 @@ export class MakeRouter {
     return result;
   }
 
+  @ApiOperationPut({
+    description: 'Update a Make by its ID',
+    path: '/{id}',
+    summary: 'Update Make',
+    parameters: {
+      path: { id: { name: 'id', description: 'The ID of the Make to update', required: true } }
+    },
+    responses: {
+        200: { description: 'Success', type: SwaggerDefinitionConstant.Response.Type.OBJECT, model: Make.name },
+        400: { description: 'Bad Parameters' },
+        422: { description: 'Unprocessable Entity' }
+    }
+  })
   @Put(':id')
   public async updateMake(req: Request, res: Response): Promise<Make>
   {
@@ -126,6 +179,23 @@ export class MakeRouter {
     return await this.makeRepo.save(make);
   }
 
+  @ApiOperationDelete({
+    description: 'Delete a Make by ID',
+    path: '/{id}',
+    summary: 'Delete Make',
+    parameters: {
+      path: { id: { name: 'id', description: 'The ID of the Make to delete', required: true } }
+    },
+    responses: {
+        200: {
+          description: 'Success',
+          type: SwaggerDefinitionConstant.Response.Type.OBJECT,
+          model: DeletionResponse.name
+        },
+        400: { description: 'Bad Parameters' },
+        422: { description: 'Unprocessable Entity' }
+    }
+  })
   @Delete(':id')
   public async deleteMake(req, resp)
   {

@@ -7,8 +7,13 @@ import { DbService, PagedResponse } from '../services/DbService';
 import Car from '../models/Car';
 import harness from './util/harness';
 import ErrorResponse from './util/ErrorResponse';
+import { ApiPath, ApiOperationGet, SwaggerDefinitionConstant } from 'swagger-express-ts';
+import { PagedCars } from './util/swagger-models/PagedResponses';
 
-
+@ApiPath({
+  path: '/search',
+  name: 'Search'
+})
 @injectable()
 @Controller('search')
 @ClassWrapper(harness)
@@ -16,6 +21,25 @@ export class SearchRouter {
 
   constructor(private db: DbService) { }
 
+  @ApiOperationGet({
+    description: 'Search Cars by their attributes',
+    summary: 'Search Cars',
+    parameters: {
+      query: {
+        make: { name: 'make', description: 'Search text for make', required: false },
+        model: { name: 'model', description: 'Search text for model', required: false },
+        color: { name: 'color', description: 'Search text for color', required: false },
+        year: { name: 'year', description: 'Search text for year', required: false },
+        bodyStyle: { name: 'bodyStyle', description: 'Search text for bodyStyle', required: false },
+        limit: { name: 'limit', description: 'max results to retrieve', required: false },
+        offset: { name: 'offset', description: 'offset of first result index', required: false }
+      }
+    },
+    responses: {
+        200: { description: 'Success', type: SwaggerDefinitionConstant.Response.Type.OBJECT, model: PagedCars.name },
+        400: { description: 'Bad Parameters' }
+    }
+  })
   @Get()
   public async searchCars(req: Request): Promise<PagedResponse<Car>>
   {

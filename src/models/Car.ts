@@ -22,7 +22,7 @@ export class Car {
     description : 'The car\'s model',
     required : true,
     type: SwaggerDefinitionConstant.OBJECT,
-    model: 'Model'
+    model: Model.name
   })
   @ManyToOne(() => Model)
   @JoinColumn({ name: 'model_id', referencedColumnName: 'id' })
@@ -32,7 +32,7 @@ export class Car {
     description : 'The color of the car',
     required : true,
     type: SwaggerDefinitionConstant.OBJECT,
-    model: 'Color'
+    model: Color.name
   })
   @ManyToOne(() => Color)
   @JoinColumn({ name: 'color_id', referencedColumnName: 'id' })

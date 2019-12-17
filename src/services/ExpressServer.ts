@@ -12,7 +12,7 @@ import ErrorResponse from '../routes/util/ErrorResponse';
 
   ExpressServer
 
-  Handles starting the express server, adding middleware,
+  Handles starting the express server, adding middleware, configuring swagger,
   initializing router classes, and setting up error handling.
 
 */
@@ -31,19 +31,17 @@ export class ExpressServer extends Server {
 
     this.app.use('/api-docs/swagger' , expressStatic('build/swagger'));
     this.app.use('/api-docs/swagger/assets' , expressStatic('node_modules/swagger-ui-dist'));
-
-    const opts = {
+    this.app.use(swagger.express({
       definition : {
         info : {
           title : 'Cars API' ,
           version : '1.0.0'
         } ,
-        externalDocs : { url : '' }
-        // Models can be defined here
+        externalDocs : {
+          url : 'https://github.com/William-Olson/cars-api/blob/master/API.md'
+        }
       }
-    };
-    this.app.use(swagger.express(opts));
-
+    }));
 
     for (const route of Routes.asArray()) {
       const routeInstance = container.resolve(route);

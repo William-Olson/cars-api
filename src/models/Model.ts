@@ -31,7 +31,7 @@ export class Model {
     description : 'The model\'s make',
     required : true,
     type: SwaggerDefinitionConstant.OBJECT,
-    model: 'Make'
+    model: Make.name
   })
   @ManyToOne(() => Make, {  cascade: [ 'remove' ], nullable: false })
   @JoinColumn({ name: 'make_id', referencedColumnName: 'id' })
@@ -41,7 +41,7 @@ export class Model {
     description : 'The model\'s body-style',
     required : true,
     type: SwaggerDefinitionConstant.OBJECT,
-    model: 'BodyStyle'
+    model: BodyStyle.name
   })
   @ManyToOne(() => BodyStyle, { cascade: [ 'remove' ], nullable: false })
   @JoinColumn({ name: 'body_style_id', referencedColumnName: 'id' })
@@ -51,7 +51,7 @@ export class Model {
     description : 'The colors available for the model',
     required : false,
     type: SwaggerDefinitionConstant.ARRAY,
-    model: 'Color'
+    model: Color.name
   })
   @ManyToMany(() => Color, { cascade: [ 'remove' ], onDelete: 'CASCADE', nullable: false })
   @JoinTable({
