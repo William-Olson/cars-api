@@ -4,13 +4,27 @@ import { injectable } from 'tsyringe';
 import { Request, Response } from 'express';
 import { DbService, PagedResponse } from '../services/DbService';
 import { Repository, Not, Equal } from 'typeorm';
+import {
+  ApiPath,
+  ApiOperationGet,
+  SwaggerDefinitionConstant,
+  ApiOperationPut,
+  ApiOperationDelete,
+  ApiOperationPost
+} from 'swagger-express-ts';
 
 import LoggerFactory, { DebugFn } from '../services/LoggerFactory';
 import harness from './util/harness';
 import ErrorResponse from './util/ErrorResponse';
 import Color from '../models/Color';
+import { PagedColors } from './util/swagger-models/PagedResponses';
+import { DeletionResponse } from './util/swagger-models/DeletionResponse';
+import { EntityInput } from './util/swagger-models/EntityInput';
 
-
+@ApiPath({
+  path: '/colors',
+  name: 'Colors'
+})
 @injectable()
 @Controller('colors')
 @ClassWrapper(harness)
@@ -25,6 +39,20 @@ export class ColorRouter {
     this.colorRepo = this.db.repo(Color);
   }
 
+  @ApiOperationGet({
+    description: 'Fetch all Colors',
+    summary: 'Fetch Colors',
+    parameters: {
+      query: {
+        limit: { name: 'limit', description: 'max results to retrieve', required: false },
+        offset: { name: 'offset', description: 'offset of first result index', required: false }
+      }
+    },
+    responses: {
+        200: { description: 'Success', type: SwaggerDefinitionConstant.Response.Type.OBJECT, model: PagedColors.name },
+        400: { description: 'Bad Parameters' }
+    }
+  })
   @Get()
   public async getColors(req: Request, res: Response): Promise<PagedResponse<Color>>
   {
@@ -44,6 +72,19 @@ export class ColorRouter {
     return result;
   }
 
+  @ApiOperationGet({
+    description: 'Get a Color by its ID',
+    path: '/{id}',
+    summary: 'Get Color by ID',
+    parameters: {
+      path: { id: { name: 'id', description: 'The ID of the Color', required: true } }
+    },
+    responses: {
+        200: { description: 'Success', type: SwaggerDefinitionConstant.Response.Type.OBJECT, model: 'Color' },
+        400: { description: 'Bad Parameters' },
+        404: { description: 'Not Found' }
+    }
+  })
   @Get(':id')
   public async getColorById(req: Request, res: Response): Promise<Color>
   {
@@ -61,6 +102,22 @@ export class ColorRouter {
     return result;
   }
 
+  @ApiOperationPost({
+    description: 'Create a Color',
+    summary: 'Create Color',
+    parameters: {
+      body: { description: 'The Color to create', required: true, model: EntityInput.name }
+    },
+    responses: {
+        200: {
+          description: 'Success',
+          type: SwaggerDefinitionConstant.Response.Type.OBJECT,
+          model: Color.name
+        },
+        400: { description: 'Bad Parameters' },
+        422: { description: 'Unprocessable Entity' }
+    }
+  })
   @Post()
   public async createColor(req: Request, res: Response): Promise<Color>
   {
@@ -81,6 +138,19 @@ export class ColorRouter {
     return result;
   }
 
+  @ApiOperationPut({
+    description: 'Update a Color by its ID',
+    path: '/{id}',
+    summary: 'Update Color',
+    parameters: {
+      path: { id: { name: 'id', description: 'The ID of the Color to update', required: true } }
+    },
+    responses: {
+        200: { description: 'Success', type: SwaggerDefinitionConstant.Response.Type.OBJECT, model: Color.name },
+        400: { description: 'Bad Parameters' },
+        422: { description: 'Unprocessable Entity' }
+    }
+  })
   @Put(':id')
   public async updateColor(req: Request, res: Response): Promise<Color>
   {
@@ -109,6 +179,23 @@ export class ColorRouter {
     return await this.colorRepo.save(color);
   }
 
+  @ApiOperationDelete({
+    description: 'Delete a Color by ID',
+    path: '/{id}',
+    summary: 'Delete Color',
+    parameters: {
+      path: { id: { name: 'id', description: 'The ID of the Color to delete', required: true } }
+    },
+    responses: {
+        200: {
+          description: 'Success',
+          type: SwaggerDefinitionConstant.Response.Type.OBJECT,
+          model: DeletionResponse.name
+        },
+        400: { description: 'Bad Parameters' },
+        422: { description: 'Unprocessable Entity' }
+    }
+  })
   @Delete(':id')
   public async deleteColor(req, resp)
   {

@@ -4,6 +4,14 @@ import { injectable } from 'tsyringe';
 import { Request, Response } from 'express';
 import { DbService, PagedResponse } from '../services/DbService';
 import { Repository, Not, Equal, In } from 'typeorm';
+import {
+  ApiPath,
+  ApiOperationGet,
+  SwaggerDefinitionConstant,
+  ApiOperationPut,
+  ApiOperationDelete,
+  ApiOperationPost
+} from 'swagger-express-ts';
 
 import LoggerFactory, { DebugFn } from '../services/LoggerFactory';
 import harness from './util/harness';
@@ -12,8 +20,14 @@ import Model from '../models/Model';
 import Make from '../models/Make';
 import Color from '../models/Color';
 import BodyStyle from '../models/BodyStyle';
+import { PagedModels } from './util/swagger-models/PagedResponses';
+import { DeletionResponse } from './util/swagger-models/DeletionResponse';
+import { ModelInput } from './util/swagger-models/EntityInput';
 
-
+@ApiPath({
+  path: '/models',
+  name: 'Models'
+})
 @injectable()
 @Controller('models')
 @ClassWrapper(harness)
@@ -28,6 +42,20 @@ export class ModelRouter {
     this.modelRepo = this.db.repo(Model);
   }
 
+  @ApiOperationGet({
+    description: 'Fetch all Models',
+    summary: 'Fetch Models',
+    parameters: {
+      query: {
+        limit: { name: 'limit', description: 'max results to retrieve', required: false },
+        offset: { name: 'offset', description: 'offset of first result index', required: false }
+      }
+    },
+    responses: {
+        200: { description: 'Success', type: SwaggerDefinitionConstant.Response.Type.OBJECT, model: PagedModels.name },
+        400: { description: 'Bad Parameters' }
+    }
+  })
   @Get()
   public async getModels(req: Request, res: Response): Promise<PagedResponse<Model>>
   {
@@ -48,6 +76,19 @@ export class ModelRouter {
     return result;
   }
 
+  @ApiOperationGet({
+    description: 'Get a Model by its ID',
+    path: '/{id}',
+    summary: 'Get Model by ID',
+    parameters: {
+      path: { id: { name: 'id', description: 'The ID of the Model', required: true } }
+    },
+    responses: {
+        200: { description: 'Success', type: SwaggerDefinitionConstant.Response.Type.OBJECT, model: 'Model' },
+        400: { description: 'Bad Parameters' },
+        404: { description: 'Not Found' }
+    }
+  })
   @Get(':id')
   public async getModelById(req: Request, res: Response): Promise<Model>
   {
@@ -68,6 +109,22 @@ export class ModelRouter {
     return result;
   }
 
+  @ApiOperationPost({
+    description: 'Create a Model',
+    summary: 'Create Model',
+    parameters: {
+      body: { description: 'The Model to create', required: true, model: ModelInput.name }
+    },
+    responses: {
+        200: {
+          description: 'Success',
+          type: SwaggerDefinitionConstant.Response.Type.OBJECT,
+          model: Model.name
+        },
+        400: { description: 'Bad Parameters' },
+        422: { description: 'Unprocessable Entity' }
+    }
+  })
   @Post()
   public async createModel(req: Request, res: Response): Promise<Model>
   {
@@ -79,6 +136,20 @@ export class ModelRouter {
 
   }
 
+  @ApiOperationPut({
+    description: 'Update a Model by its ID',
+    path: '/{id}',
+    summary: 'Update Model',
+    parameters: {
+      path: { id: { name: 'id', description: 'The ID of the Model to update', required: true } },
+      body: { description: 'The Model data to update', required: true, model: ModelInput.name }
+    },
+    responses: {
+        200: { description: 'Success', type: SwaggerDefinitionConstant.Response.Type.OBJECT, model: Model.name },
+        400: { description: 'Bad Parameters' },
+        422: { description: 'Unprocessable Entity' }
+    }
+  })
   @Put(':id')
   public async updateModel(req: Request, res: Response): Promise<Model>
   {
@@ -98,6 +169,23 @@ export class ModelRouter {
     return result;
   }
 
+  @ApiOperationDelete({
+    description: 'Delete a Model by ID',
+    path: '/{id}',
+    summary: 'Delete Model',
+    parameters: {
+      path: { id: { name: 'id', description: 'The ID of the Model to delete', required: true } }
+    },
+    responses: {
+        200: {
+          description: 'Success',
+          type: SwaggerDefinitionConstant.Response.Type.OBJECT,
+          model: DeletionResponse.name
+        },
+        400: { description: 'Bad Parameters' },
+        422: { description: 'Unprocessable Entity' }
+    }
+  })
   @Delete(':id')
   public async deleteModel(req, resp)
   {

@@ -23,3 +23,27 @@ This will start the database as a Docker container then build and run the API Se
 The server should be available at `http://localhost:3000` once started.
 
 
+### Swagger
+
+You can use the Swagger UI when running the API locally.
+
+It should automatically be served at `http://localhost:3000/api-docs/swagger`.
+
+![alt-text][swagger-ui-img]
+
+
+Swagger makes it easy to build requests and parameters for testing the API.
+
+![alt-text][swagger-search-img]
+
+
+### Postman
+
+If you are familiar with [Postman](https://www.getpostman.com/), there are postman collections for this API [here](https://github.com/William-Olson/cars-api/blob/master/postman-collections). Import one of them into Postman to start using the collection.
+
+![alt-text][postman-img]
+
+
+[postman-img]: ./screenshots/postman.png
+[swagger-ui-img]: ./screenshots/swagger-ui.png
+[swagger-search-img]: ./screenshots/swagger-search.png

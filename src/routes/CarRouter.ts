@@ -4,14 +4,28 @@ import { injectable } from 'tsyringe';
 import { Request, Response } from 'express';
 import { DbService, PagedResponse } from '../services/DbService';
 import { Repository } from 'typeorm';
+import {
+  ApiPath,
+  ApiOperationGet,
+  SwaggerDefinitionConstant,
+  ApiOperationPut,
+  ApiOperationDelete,
+  ApiOperationPost
+} from 'swagger-express-ts';
 
 import LoggerFactory, { DebugFn } from '../services/LoggerFactory';
 import harness from './util/harness';
 import ErrorResponse from './util/ErrorResponse';
 import Car from '../models/Car';
 import Model from '../models/Model';
+import { PagedCars } from './util/swagger-models/PagedResponses';
+import { DeletionResponse } from './util/swagger-models/DeletionResponse';
+import { CarInput } from './util/swagger-models/EntityInput';
 
-
+@ApiPath({
+  path: '/cars',
+  name: 'Cars'
+})
 @injectable()
 @Controller('cars')
 @ClassWrapper(harness)
@@ -26,6 +40,20 @@ export class CarRouter {
     this.carRepo = this.db.repo(Car);
   }
 
+  @ApiOperationGet({
+    description: 'Fetch all Cars',
+    summary: 'Fetch Cars',
+    parameters: {
+      query: {
+        limit: { name: 'limit', description: 'max results to retrieve', required: false },
+        offset: { name: 'offset', description: 'offset of first result index', required: false }
+      }
+    },
+    responses: {
+        200: { description: 'Success', type: SwaggerDefinitionConstant.Response.Type.OBJECT, model: PagedCars.name },
+        400: { description: 'Bad Parameters' }
+    }
+  })
   @Get()
   public async getCars(req: Request, res: Response): Promise<PagedResponse<Car>>
   {
@@ -46,6 +74,19 @@ export class CarRouter {
     return result;
   }
 
+  @ApiOperationGet({
+    description: 'Get a Car by its ID',
+    path: '/{id}',
+    summary: 'Get Car by ID',
+    parameters: {
+      path: { id: { name: 'id', description: 'The ID of the Car', required: true } }
+    },
+    responses: {
+        200: { description: 'Success', type: SwaggerDefinitionConstant.Response.Type.OBJECT, model: 'Car' },
+        400: { description: 'Bad Parameters' },
+        404: { description: 'Not Found' }
+    }
+  })
   @Get(':id')
   public async getCarById(req: Request, res: Response): Promise<Car>
   {
@@ -65,6 +106,22 @@ export class CarRouter {
     return result;
   }
 
+  @ApiOperationPost({
+    description: 'Create a Car',
+    summary: 'Create Car',
+    parameters: {
+      body: { description: 'The Car to create', required: true, model: CarInput.name }
+    },
+    responses: {
+        200: {
+          description: 'Success',
+          type: SwaggerDefinitionConstant.Response.Type.OBJECT,
+          model: Car.name
+        },
+        400: { description: 'Bad Parameters' },
+        422: { description: 'Unprocessable Entity' }
+    }
+  })
   @Post()
   public async createCar(req: Request, res: Response): Promise<Car>
   {
@@ -80,6 +137,20 @@ export class CarRouter {
     return fullModel;
   }
 
+  @ApiOperationPut({
+    description: 'Update a Car by its ID',
+    path: '/{id}',
+    summary: 'Update Car',
+    parameters: {
+      path: { id: { name: 'id', description: 'The ID of the Car to update', required: true } },
+      body: { description: 'The Car data to update', required: true, model: CarInput.name }
+    },
+    responses: {
+        200: { description: 'Success', type: SwaggerDefinitionConstant.Response.Type.OBJECT, model: Car.name },
+        400: { description: 'Bad Parameters' },
+        422: { description: 'Unprocessable Entity' }
+    }
+  })
   @Put(':id')
   public async updateCar(req: Request, res: Response): Promise<Car>
   {
@@ -100,6 +171,23 @@ export class CarRouter {
     return result;
   }
 
+  @ApiOperationDelete({
+    description: 'Delete a Car by ID',
+    path: '/{id}',
+    summary: 'Delete Car',
+    parameters: {
+      path: { id: { name: 'id', description: 'The ID of the Car to delete', required: true } }
+    },
+    responses: {
+        200: {
+          description: 'Success',
+          type: SwaggerDefinitionConstant.Response.Type.OBJECT,
+          model: DeletionResponse.name
+        },
+        400: { description: 'Bad Parameters' },
+        422: { description: 'Unprocessable Entity' }
+    }
+  })
   @Delete(':id')
   public async deleteCar(req: Request)
   {

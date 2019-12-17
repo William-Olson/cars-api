@@ -1,5 +1,7 @@
 import { Server } from '@overnightjs/core';
 import { container, injectable } from 'tsyringe';
+import { static as expressStatic } from 'express';
+import * as swagger from 'swagger-express-ts';
 import * as bodyParser from 'body-parser';
 
 import LoggerFactory, { DebugFn } from './LoggerFactory';
@@ -10,7 +12,7 @@ import ErrorResponse from '../routes/util/ErrorResponse';
 
   ExpressServer
 
-  Handles starting the express server, adding middleware,
+  Handles starting the express server, adding middleware, configuring swagger,
   initializing router classes, and setting up error handling.
 
 */
@@ -26,6 +28,20 @@ export class ExpressServer extends Server {
 
     this.app.use(bodyParser.json());
     this.app.use(bodyParser.urlencoded({ extended: true }));
+
+    this.app.use('/api-docs/swagger' , expressStatic('build/swagger'));
+    this.app.use('/api-docs/swagger/assets' , expressStatic('node_modules/swagger-ui-dist'));
+    this.app.use(swagger.express({
+      definition : {
+        info : {
+          title : 'Cars API' ,
+          version : '1.0.0'
+        } ,
+        externalDocs : {
+          url : 'https://github.com/William-Olson/cars-api/blob/master/API.md'
+        }
+      }
+    }));
 
     for (const route of Routes.asArray()) {
       const routeInstance = container.resolve(route);

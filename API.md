@@ -2,9 +2,9 @@
 
 Provides descriptions of _endpoints_, _parameters_, and _responses_ as well as basic _curl examples_.
 
-**Postman Collection**
+**Tools**
 
-If you are familiar with [Postman](https://www.getpostman.com/), there are postman collections for this API [here](https://github.com/William-Olson/cars-api/blob/master/postman-collections). Import one of them into Postman to start using the collection.
+You can use the provided [Postman Collections](https://github.com/William-Olson/cars-api/blob/master/README.md#Postman) or the [Swagger UI](https://github.com/William-Olson/cars-api/blob/master/README.md#Swagger) for testing the API.
 
 **Sections**
 
