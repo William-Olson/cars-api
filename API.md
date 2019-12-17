@@ -4,7 +4,7 @@ Provides descriptions of _endpoints_, _parameters_, and _responses_ as well as b
 
 **Tools**
 
-You can use the provided [Postman Collections](https://github.com/William-Olson/cars-api/blob/master/README.md/#postman) or the [Swagger UI](https://github.com/William-Olson/cars-api/blob/master/README.md#swagger) for testing the API.
+You can use the provided [Postman Collections](https://github.com/William-Olson/cars-api/blob/master/README.md/#Postman) or the [Swagger UI](https://github.com/William-Olson/cars-api/blob/master/README.md/#Swagger) for testing the API.
 
 **Sections**
 

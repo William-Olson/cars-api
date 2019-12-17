@@ -2,7 +2,11 @@
 
 Example API NodeJS Server. Implemented with Express and TypeScript.
 
-Connects and stores data to a MySQL database and provides a REST API for basic CRUD operations (see [API.md](https://github.com/William-Olson/cars-api/blob/master/API.md)).
+Connects and stores data to a MySQL database and provides a REST API for basic CRUD operations.
+
+### API Docs
+
+See: [API Reference Documentation](https://github.com/William-Olson/cars-api/blob/master/API.md).
 
 ### Running Locally
 
