@@ -9,8 +9,12 @@ import LoggerFactory, { DebugFn } from '../services/LoggerFactory';
 import harness from './util/harness';
 import ErrorResponse from './util/ErrorResponse';
 import Make from '../models/Make';
+import { ApiPath, ApiOperationGet, SwaggerDefinitionConstant } from 'swagger-express-ts';
 
-
+@ApiPath({
+  path: '/makes',
+  name: 'Makes'
+})
 @injectable()
 @Controller('makes')
 @ClassWrapper(harness)
@@ -44,6 +48,19 @@ export class MakeRouter {
     return result;
   }
 
+  @ApiOperationGet({
+    description: 'Get a make by its ID',
+    path: '/{id}',
+    summary: 'Get make by ID',
+    parameters: {
+      path: { id: { name: 'id', description: 'The ID of the make', required: true } }
+    },
+    responses: {
+        200: { description: 'Success', type: SwaggerDefinitionConstant.Response.Type.OBJECT, model: 'Make' },
+        400: { description: 'Bad Parameters' },
+        404: { description: 'Not Found' }
+    }
+  })
   @Get(':id')
   public async getMakeById(req: Request): Promise<Make>
   {

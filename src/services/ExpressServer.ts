@@ -1,5 +1,7 @@
 import { Server } from '@overnightjs/core';
 import { container, injectable } from 'tsyringe';
+import { static as expressStatic } from 'express';
+import * as swagger from 'swagger-express-ts';
 import * as bodyParser from 'body-parser';
 
 import LoggerFactory, { DebugFn } from './LoggerFactory';
@@ -26,6 +28,22 @@ export class ExpressServer extends Server {
 
     this.app.use(bodyParser.json());
     this.app.use(bodyParser.urlencoded({ extended: true }));
+
+    this.app.use('/api-docs/swagger' , expressStatic('build/swagger'));
+    this.app.use('/api-docs/swagger/assets' , expressStatic('node_modules/swagger-ui-dist'));
+
+    const opts = {
+      definition : {
+        info : {
+          title : 'Cars API' ,
+          version : '1.0.0'
+        } ,
+        externalDocs : { url : '' }
+        // Models can be defined here
+      }
+    };
+    this.app.use(swagger.express(opts));
+
 
     for (const route of Routes.asArray()) {
       const routeInstance = container.resolve(route);

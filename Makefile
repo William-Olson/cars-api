@@ -2,6 +2,7 @@ dev: start-db
 	@COMMENT='Installing Dependencies' make -s flower-box
 	node -v
 	npm install
+	cp -r ./src/swagger ./build/
 	@COMMENT='Running Dev Build' make -s flower-box
 	DEBUG=app* NODE_ENV=development npm run dev
 
