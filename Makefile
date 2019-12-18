@@ -1,21 +1,25 @@
-dev: start-db
+dev: start-containers
 	@COMMENT='Installing Dependencies' make -s flower-box
 	node -v
 	npm install
 	cp -r ./src/swagger ./build/
 	@COMMENT='Running Dev Build' make -s flower-box
-	DEBUG=app* NODE_ENV=development npm run dev
+	DEBUG=app* NODE_ENV=development ES_URL=http://localhost:9200 npm run dev
 
-start-db: clean
-	@COMMENT='Starting MySQL via Docker' make -s flower-box
-	./start_dev_db.sh
+start-containers: clean
+	@COMMENT='Starting Docker Containers' make -s flower-box
+	./scripts/start_dev_db.sh
+	./scripts/start_elasticsearch.sh
+	./scripts/start_kibana.sh
 
 clean:
 	@mkdir -p ./build
 	rm -rf ./build
 	mkdir -p ./build
-	@COMMENT='Attempting to stop MySQL DB' make -s flower-box
-	@docker kill mysql-db || echo 'kill command failed, but thats okay'
+	@COMMENT='Attempting to stop Docker Containers' make -s flower-box
+	@docker kill mysql-db || echo 'kill db command failed, but thats okay'
+	@docker kill elastic || echo 'kill elastic command failed, but thats okay'
+	@docker kill kibana || echo 'kill kibana command failed, but thats okay'
 
 flower-box:
 	@echo
