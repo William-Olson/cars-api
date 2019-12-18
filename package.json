@@ -13,8 +13,10 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@elastic/elasticsearch": "^6.8.4",
     "@overnightjs/core": "^1.6.9",
     "@overnightjs/jwt": "^1.1.14",
+    "@types/elasticsearch": "^5.0.36",
     "@types/express": "^4.17.2",
     "@types/node": "^12.12.14",
     "async-retry": "^1.2.3",
