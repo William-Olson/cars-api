@@ -1,8 +1,8 @@
 {
   "name": "cars-api",
-  "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
+  "version": "1.1.0",
+  "description": "REST API for storing Cars",
+  "main": "build/app.js",
   "scripts": {
     "start": "tsc && node build/app.js",
     "test": "echo \"Error: no test specified\" && exit 1",
@@ -10,7 +10,7 @@
     "dev": "gulp dev",
     "build": "gulp"
   },
-  "author": "",
+  "author": "William Olson",
   "license": "ISC",
   "dependencies": {
     "@elastic/elasticsearch": "^6.8.4",
@@ -41,5 +41,9 @@
     "gulp-typescript": "^6.0.0-alpha.1",
     "tslint": "^5.20.1",
     "typescript": "^3.7.2"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/William-Olson/cars-api.git"
   }
 }
