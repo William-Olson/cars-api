@@ -866,6 +866,8 @@ The response will have a `success` boolean and a `message` property indicating t
 
 Fetch a filtered list of cars via search parameters.
 
+Use this endpoint for faceted search or filtering functionality.
+
 **Query Parameters**
 
 - `limit` represents the maximum number of items to retrieve.
@@ -878,7 +880,7 @@ Fetch a filtered list of cars via search parameters.
 
 **Examples**
 
-Provide as few params as you want.
+Provide as few parameters as you want.
 
 ```bash
 curl -X GET 'http://<server-address>/search?bodyStyle=sport'
@@ -923,3 +925,123 @@ a `results` property containing an array of results with max size specified by t
     // ... etc.
   ]
 }
+```
+
+
+### GET `/search/es`
+
+Fetch the list of cars from search parameters via Elasticsearch. This endpoint usually
+retrieves _more_ results as compared to `/search`. Results are weighted and sorted by relevance.
+
+Use this endpoint for autocomplete and advanced searching.
+
+**Query Parameters**
+
+- `limit` represents the maximum number of items to retrieve.
+- `offset` represents the index of where to start the retrieval.
+- `make` is the search input for the make of the car.
+- `model` is the search input for the model of the car.
+- `year` is the search input for the year of the car.
+- `bodyStyle` is the search input for the bodyStyle of the car.
+- `color` is the search input for the color of the car.
+
+**Examples**
+
+Parameters are optional
+
+```bash
+curl -X GET 'http://<server-address>/search/es
+```
+
+Example with all parameters:
+
+```bash
+curl -X GET \
+  'http://<server-address>/search/es?limit=100&offset=0&year=2020&make=audi&color=black&bodyStyle=sport&model=r8'
+```
+
+**Response**
+
+The response payload will include a `total` property representing the total rows found and
+a `results` property containing an array of results with max size specified by the `limit` query param.
+
+```js
+{
+  "total": 500,
+  "results": [
+    {
+      "id": 1,
+      "year": 2020,
+      "color": {
+        "id": 1,
+        "name": "black"
+      },
+      "model": {
+        "id": 1,
+        "name": "r8",
+        "make": {
+          "id": 1,
+          "name": "audi"
+        },
+        "bodyStyle": {
+          "id": 1,
+          "name": "sport"
+        }
+      }
+    },
+    // ... etc.
+  ]
+}
+```
+
+### GET `/search/es/term`
+
+Fetch the list of cars from a single search term via Elasticsearch.
+
+This endpoint is good for autocomplete and advanced searching implementation.
+
+**Query Parameters**
+
+- `limit` represents the maximum number of items to retrieve.
+- `offset` represents the index of where to start the retrieval.
+- `q` is the search input for the query.
+
+**Examples**
+
+```bash
+curl -X GET 'http://<server-address>/search/es/term?q=sport'
+```
+
+**Response**
+
+The response payload will include a `total` property representing the total rows found and
+a `results` property containing an array of results with max size specified by the `limit` query param.
+
+```js
+{
+  "total": 500,
+  "results": [
+    {
+      "id": 1,
+      "year": 2020,
+      "color": {
+        "id": 1,
+        "name": "black"
+      },
+      "model": {
+        "id": 1,
+        "name": "r8",
+        "make": {
+          "id": 1,
+          "name": "audi"
+        },
+        "bodyStyle": {
+          "id": 1,
+          "name": "sport"
+        }
+      }
+    },
+    // ... etc.
+  ]
+}
+```

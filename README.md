@@ -1,8 +1,8 @@
 ## Cars API
 
-Example API NodeJS Server. Implemented with Express and TypeScript.
+Simple Node.js server that serves a REST API for managing cars. Implemented with Express and TypeScript.
 
-Connects and stores data to a MySQL database and provides a REST API for basic CRUD operations.
+Connects and stores data to a MySQL database and utilizes Elasticsearch for fast searching capabilities.
 
 ### API Docs
 
