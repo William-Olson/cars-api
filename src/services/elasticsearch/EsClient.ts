@@ -219,6 +219,38 @@ export default class EsClient {
 
   /*
 
+    Perform a query that matches all documents
+
+  */
+  public async matchAll(offset?: number, limit?: number): Promise<PagedResponse<Car>>
+  {
+    offset = offset || 0;
+    limit = limit || 100;
+
+    const searchParams = {
+      index: EsClient.INDEX,
+      from: offset,
+      size: limit,
+      body: { query: { match_all: { } } }
+    };
+
+    try {
+      const { body: res } = await this.esClient.search(searchParams);
+      const cars = this.convertHitsToModels(res.hits.hits);
+
+      return {
+        total: res.hits.total || 0,
+        results: cars,
+      };
+    }
+    catch (e) {
+      this.logger('Elasticsearch Error :: ', e.body);
+      return { results: [ ], total: 0 };
+    }
+  }
+
+  /*
+
     Perform a query on Elasticsearch for cars where a single search term matches any field
 
   */

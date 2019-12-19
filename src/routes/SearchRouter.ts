@@ -52,6 +52,10 @@ export class SearchRouter {
 
     const term = (req.query.q || '').toLowerCase().trim();
 
+    if (!term) {
+      return await this.es.matchAll(offset, limit);
+    }
+
     return await this.es.searchCarsByTerm(term, offset, limit);
   }
 
