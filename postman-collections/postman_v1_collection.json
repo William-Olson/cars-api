@@ -84,7 +84,9 @@
 			"description": "",
 			"collectionId": "8c9941ae-bcf0-508b-215f-0857a26db830",
 			"order": [
-				"97329f09-2b13-07dc-e1c9-2b880e510270"
+				"97329f09-2b13-07dc-e1c9-2b880e510270",
+				"c53d2235-9848-abfc-87e5-a19eddd7a762",
+				"09e31575-d026-e0d0-2b43-439583729405"
 			],
 			"owner": 0,
 			"folders_order": [],
@@ -136,6 +138,36 @@
 			"collectionRequestId": "00208d52-3e3f-0d3c-b168-ce9f9950261c",
 			"folder": "108c2bff-8378-c61e-6c28-07f4cbee9d72",
 			"rawModeData": "{\n\t\"name\": \"black\"\n}"
+		},
+		{
+			"id": "09e31575-d026-e0d0-2b43-439583729405",
+			"headers": "",
+			"headerData": [],
+			"url": "localhost:3000/search/es/term?q=2020",
+			"queryParams": [
+				{
+					"key": "q",
+					"value": "2020",
+					"equals": true,
+					"description": "",
+					"enabled": true
+				}
+			],
+			"preRequestScript": null,
+			"pathVariables": {},
+			"pathVariableData": [],
+			"method": "GET",
+			"data": null,
+			"dataMode": "params",
+			"version": 2,
+			"tests": null,
+			"currentHelper": "normal",
+			"helperAttributes": {},
+			"time": 1576736655370,
+			"name": "search-es (term) :: cars",
+			"description": "",
+			"collectionId": "8c9941ae-bcf0-508b-215f-0857a26db830",
+			"responses": []
 		},
 		{
 			"id": "2e427f12-a25d-392e-597f-6236cb7b7cd3",
@@ -774,6 +806,78 @@
 			"responses": [],
 			"folder": "b03b01e1-b6b2-13fe-e5ca-689fd9246cf5",
 			"rawModeData": "{\n\t\"name\": \"sport\"\n}"
+		},
+		{
+			"id": "c53d2235-9848-abfc-87e5-a19eddd7a762",
+			"headers": "",
+			"headerData": [],
+			"url": "localhost:3000/search/es?limit=100&offset=0&year=2020&make=audi&color=black&bodyStyle=sedan&model=r8",
+			"queryParams": [
+				{
+					"key": "limit",
+					"value": "100",
+					"equals": true,
+					"description": "",
+					"enabled": true
+				},
+				{
+					"key": "offset",
+					"value": "0",
+					"equals": true,
+					"description": "",
+					"enabled": true
+				},
+				{
+					"key": "year",
+					"value": "2020",
+					"equals": true,
+					"description": "",
+					"enabled": true
+				},
+				{
+					"key": "make",
+					"value": "audi",
+					"equals": true,
+					"description": "",
+					"enabled": true
+				},
+				{
+					"key": "color",
+					"value": "black",
+					"equals": true,
+					"description": "",
+					"enabled": true
+				},
+				{
+					"key": "bodyStyle",
+					"value": "sedan",
+					"equals": true,
+					"description": "",
+					"enabled": true
+				},
+				{
+					"key": "model",
+					"value": "r8",
+					"equals": true,
+					"description": "",
+					"enabled": true
+				}
+			],
+			"preRequestScript": null,
+			"pathVariables": {},
+			"pathVariableData": [],
+			"method": "GET",
+			"data": null,
+			"dataMode": "params",
+			"version": 2,
+			"tests": null,
+			"currentHelper": "normal",
+			"helperAttributes": {},
+			"time": 1576736668496,
+			"name": "search-es :: cars",
+			"description": "",
+			"collectionId": "8c9941ae-bcf0-508b-215f-0857a26db830",
+			"responses": []
 		},
 		{
 			"id": "c5db3935-071a-1b47-9cab-6e1cb22bd7e1",

@@ -689,6 +689,103 @@
 						"description": ""
 					},
 					"response": []
+				},
+				{
+					"name": "search-es :: cars",
+					"request": {
+						"url": {
+							"raw": "localhost:3000/search/es?limit=100&offset=0&year=2020&make=audi&color=black&bodyStyle=sedan&model=r8",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"search",
+								"es"
+							],
+							"query": [
+								{
+									"key": "limit",
+									"value": "100",
+									"equals": true,
+									"description": ""
+								},
+								{
+									"key": "offset",
+									"value": "0",
+									"equals": true,
+									"description": ""
+								},
+								{
+									"key": "year",
+									"value": "2020",
+									"equals": true,
+									"description": ""
+								},
+								{
+									"key": "make",
+									"value": "audi",
+									"equals": true,
+									"description": ""
+								},
+								{
+									"key": "color",
+									"value": "black",
+									"equals": true,
+									"description": ""
+								},
+								{
+									"key": "bodyStyle",
+									"value": "sedan",
+									"equals": true,
+									"description": ""
+								},
+								{
+									"key": "model",
+									"value": "r8",
+									"equals": true,
+									"description": ""
+								}
+							],
+							"variable": []
+						},
+						"method": "GET",
+						"header": [],
+						"body": {},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "search-es (term) :: cars",
+					"request": {
+						"url": {
+							"raw": "localhost:3000/search/es/term?q=2020",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"search",
+								"es",
+								"term"
+							],
+							"query": [
+								{
+									"key": "q",
+									"value": "2020",
+									"equals": true,
+									"description": ""
+								}
+							],
+							"variable": []
+						},
+						"method": "GET",
+						"header": [],
+						"body": {},
+						"description": ""
+					},
+					"response": []
 				}
 			]
 		}
