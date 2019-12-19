@@ -116,8 +116,8 @@ export class ModelRouter {
       body: { description: 'The Model to create', required: true, model: ModelInput.name }
     },
     responses: {
-        200: {
-          description: 'Success',
+        201: {
+          description: 'Created',
           type: SwaggerDefinitionConstant.Response.Type.OBJECT,
           model: Model.name
         },

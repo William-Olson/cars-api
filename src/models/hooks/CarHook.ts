@@ -23,17 +23,20 @@ export class CarHook implements EntitySubscriberInterface<Car> {
 
   */
   public async afterInsert(event: InsertEvent<Car>) {
-    // flatten model for indexing
-    const flat = await this.inflatePartialModelAndFlatten(event.entity);
+    try {
+      // flatten model for indexing
+      const flat = await this.inflatePartialModelAndFlatten(event.entity);
 
-    if (!flat) {
-      throw new Error(`Unable to index car with id ${event.entity.id}`);
+      if (!flat) {
+        throw new Error(`Unable to index car with id ${event.entity.id}`);
+      }
+
+      // index
+      await es.index(flat);
     }
-
-    logger('indexing car . . .');
-
-    // index
-    await es.index(flat);
+    catch (e) {
+      logger(e);
+    }
   }
 
   /*
@@ -42,12 +45,18 @@ export class CarHook implements EntitySubscriberInterface<Car> {
 
   */
   public async afterUpdate(event: UpdateEvent<Car>) {
+    try {
+      const flat = await this.inflatePartialModelAndFlatten(event.entity);
 
-     logger(`AFTER UPDATE: `, event.entity);
-     logger(event.updatedColumns.map(m => m.propertyName));
+      if (!flat) {
+        throw new Error(`Unable to update the indexed car with id ${event.entity.id}`);
+      }
 
-    // TODO batch update 'color'
-    // to event.entity.name where 'color_id' = event.entity.id
+      await es.update(flat);
+    }
+    catch (e) {
+      logger(e);
+    }
   }
 
   /*

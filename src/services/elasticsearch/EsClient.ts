@@ -135,6 +135,90 @@ export default class EsClient {
 
   /*
 
+    Update an Elasticsearch document
+
+  */
+  public async update(document)
+  {
+
+    if (!document || !document.id) {
+      throw new Error('Malformed document parameter');
+    }
+
+    this.logger(`Updating indexed document ${document.id} in index ${EsClient.INDEX}`);
+
+    return await this.esClient.update({
+      id: document.id,
+      index: EsClient.INDEX,
+      type: 'default',
+      body: { doc: document }
+    });
+
+  }
+
+  /*
+
+    Update many documents at once via a query
+
+  */
+  public async bulkUpdateField(id: number, field: string, value: string)
+  {
+
+    this.logger(`bulk updating '${field}' field to '${value}' for documents with ${field}_id = ${id}`);
+    const body = {
+      script : {
+          source: `ctx._source.${field} = params.value`,
+          lang: 'painless',
+          params: { value }
+      },
+      query: {
+        term: {
+          [`${field}_id`]: id
+        }
+      }
+    };
+
+    await this.esClient.updateByQuery({ index: EsClient.INDEX, type: 'default', body });
+  }
+
+  /*
+
+    Update elastic search docs based on model changes
+
+  */
+  public async updateByModelData(model: Model) {
+
+    this.logger(`bulk updating 'model' data for documents with model_id = ${model.id}`);
+    const body = {
+      script : {
+          source: `
+            ctx._source.model = params.modelValue;
+            ctx._source.make = params.makeValue;
+            ctx._source.body_style = params.bodyValue;
+            ctx._source.body_style_id = params.bodyId;
+            ctx._source.make_id = params.makeId;
+          `,
+          lang: 'painless',
+          params: {
+            modelValue: model.name,
+            bodyValue: (model.bodyStyle || { }).name,
+            makeValue: (model.make || { }).name,
+            bodyId: (model.bodyStyle || { }).id,
+            makeId: (model.make || { }).id,
+          }
+      },
+      query: {
+        term: {
+          model_id: model.id
+        }
+      }
+    };
+
+    await this.esClient.updateByQuery({ index: EsClient.INDEX, type: 'default', body });
+  }
+
+  /*
+
     Perform a query on Elasticsearch for cars where a single search term matches any field
 
   */
@@ -174,7 +258,7 @@ export default class EsClient {
 
   /*
 
-    Perform a Elasticsearch search query for cars using multiple search terms for car attributes
+    Perform a query on Elasticsearch for cars matching specific car fields
 
   */
   public async searchCars(fields: CarSearchTerms, offset?: number, limit?: number): Promise<PagedResponse<Car>>
@@ -265,6 +349,5 @@ export default class EsClient {
       return car;
     });
   }
-
 
 }

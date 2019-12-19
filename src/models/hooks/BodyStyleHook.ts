@@ -22,12 +22,17 @@ export class BodyStyleHook implements EntitySubscriberInterface<BodyStyle> {
 
   */
   public async afterUpdate(event: UpdateEvent<BodyStyle>) {
+    try {
 
-     logger(`AFTER UPDATE: `, event.entity);
-     logger(event.updatedColumns.map(m => m.propertyName));
+      if (!event.entity.id || !event.entity.name) {
+        throw new Error('Missing data for bodyStyle. Can\'t update es documents');
+      }
 
-    // TODO batch update 'body_style'
-    // to event.entity.name where 'body_style_id' = event.entity.id
+      await es.bulkUpdateField(event.entity.id, 'body_style', event.entity.name);
+    }
+    catch (e) {
+      logger(e);
+    }
   }
 
 }

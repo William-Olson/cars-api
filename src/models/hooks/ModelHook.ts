@@ -21,12 +21,12 @@ export class ModelHook implements EntitySubscriberInterface<Model> {
 
   */
   public async afterUpdate(event: UpdateEvent<Model>) {
-
-     logger(`AFTER UPDATE: `, event.entity);
-     logger(event.updatedColumns.map(m => m.propertyName));
-
-    // TODO batch update 'color'
-    // to event.entity.name where 'color_id' = event.entity.id
+     try {
+      await es.updateByModelData(event.entity);
+     }
+     catch (e) {
+       logger(e);
+     }
   }
 
 }

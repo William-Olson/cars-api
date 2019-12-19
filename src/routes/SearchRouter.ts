@@ -25,6 +25,7 @@ export class SearchRouter {
   @ApiOperationGet({
     description: 'Search Cars by a single term via Elasticsearch. Results are sorted by relevance.',
     summary: 'Search Cars By Term (ES)',
+    path: '/es/term',
     parameters: {
       query: {
         q: { name: 'q', description: 'Search text', required: false },
@@ -57,6 +58,7 @@ export class SearchRouter {
   @ApiOperationGet({
     description: 'Search Cars by attributes via Elasticsearch. More of a forgiving style of search. Should yield more results compared to the /search endpoint. Sorted by relevance.',
     summary: 'Search Cars By Attributes (ES)',
+    path: '/es',
     parameters: {
       query: {
         make: { name: 'make', description: 'Search text for make', required: false },

@@ -113,8 +113,8 @@ export class BodyStyleRouter {
       body: { description: 'The BodyStyle to create', required: true, model: EntityInput.name }
     },
     responses: {
-        200: {
-          description: 'Success',
+        201: {
+          description: 'Created',
           type: SwaggerDefinitionConstant.Response.Type.OBJECT,
           model: BodyStyle.name
         },

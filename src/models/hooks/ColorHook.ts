@@ -22,11 +22,18 @@ export class ColorHook implements EntitySubscriberInterface<Color> {
   */
   public async afterUpdate(event: UpdateEvent<Color>) {
 
-     logger(`AFTER UPDATE: `, event.entity);
-     logger(event.updatedColumns.map(m => m.propertyName));
+    try {
 
-    // TODO batch update 'color'
-    // to event.entity.name where 'color_id' = event.entity.id
+      if (!event.entity.id || !event.entity.name) {
+        throw new Error('Missing data for color. Can\'t update es documents');
+      }
+
+      await es.bulkUpdateField(event.entity.id, 'color', event.entity.name);
+    }
+    catch (e) {
+      logger(e);
+    }
+
   }
 
 }

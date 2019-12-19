@@ -21,12 +21,17 @@ export class MakeHook implements EntitySubscriberInterface<Make> {
 
   */
   public async afterUpdate(event: UpdateEvent<Make>) {
+    try {
 
-     logger(`AFTER UPDATE: `, event.entity);
-     logger(event.updatedColumns.map(m => m.propertyName));
+      if (!event.entity.id || !event.entity.name) {
+        throw new Error('Missing data for make. Can\'t update es documents');
+      }
 
-    // TODO batch update 'color'
-    // to event.entity.name where 'color_id' = event.entity.id
+      await es.bulkUpdateField(event.entity.id, 'make', event.entity.name);
+    }
+    catch (e) {
+      logger(e);
+    }
   }
 
 }

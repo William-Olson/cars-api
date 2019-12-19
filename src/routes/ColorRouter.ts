@@ -109,8 +109,8 @@ export class ColorRouter {
       body: { description: 'The Color to create', required: true, model: EntityInput.name }
     },
     responses: {
-        200: {
-          description: 'Success',
+        201: {
+          description: 'Created',
           type: SwaggerDefinitionConstant.Response.Type.OBJECT,
           model: Color.name
         },

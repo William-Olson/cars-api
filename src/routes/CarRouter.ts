@@ -113,8 +113,8 @@ export class CarRouter {
       body: { description: 'The Car to create', required: true, model: CarInput.name }
     },
     responses: {
-        200: {
-          description: 'Success',
+        201: {
+          description: 'Created',
           type: SwaggerDefinitionConstant.Response.Type.OBJECT,
           model: Car.name
         },
@@ -158,7 +158,7 @@ export class CarRouter {
     const inputModel: Car = await this.validateCarAndGetNewModel(req.body, req.params.id);
 
     // update
-    await this.carRepo.update(req.params.id, inputModel);
+    await this.carRepo.save(inputModel);
 
     // fetch and return updated
     const result = await this.carRepo.findOne(req.body.id, {
