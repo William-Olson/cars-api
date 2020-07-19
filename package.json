@@ -24,7 +24,7 @@
     "debug": "^4.1.1",
     "express": "^4.17.1",
     "http-status-codes": "^1.4.0",
-    "lodash": "^4.17.15",
+    "lodash": "^4.17.19",
     "mysql": "^2.17.1",
     "reflect-metadata": "^0.1.13",
     "supports-color": "^7.1.0",
