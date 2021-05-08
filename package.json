@@ -31,7 +31,7 @@
     "swagger-express-ts": "^1.0.1",
     "swagger-ui-dist": "^3.24.3",
     "tsyringe": "^4.0.1",
-    "typeorm": "^0.2.21"
+    "typeorm": "^0.2.25"
   },
   "devDependencies": {
     "gulp": "^4.0.2",
